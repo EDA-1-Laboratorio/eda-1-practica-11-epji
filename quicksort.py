@@ -38,13 +38,18 @@ def particiona(arr: list, lo: int, hi: int) -> int:
 
     for j in range(lo, hi):
         # TODO: si arr[j] <= pivot:
+         if arr[j] <= pivot:
         #           incrementa i
+            i += 1
         #           intercambia arr[i] con arr[j]
-        pass
+            arr[i], arr[j] = arr[j], arr[i]
+        
 
     # TODO: coloca el pivote en su posición definitiva
     #       intercambia arr[i + 1] con arr[hi]
+    arr[i + 1], arr[hi] = arr[hi], arr[i + 1]
     # TODO: devuelve i + 1
+    return i + 1
 
 
 def particiona_aleatoria(arr: list, lo: int, hi: int) -> int:
@@ -53,8 +58,16 @@ def particiona_aleatoria(arr: list, lo: int, hi: int) -> int:
     Esto evita el peor caso O(n²) en arreglos ya ordenados.
     """
     # TODO: elige un índice aleatorio entre lo y hi (inclusive)
-    # TODO: intercambia arr[idx] con arr[hi]
+
+    pivot_index = random.randint(lo, hi)
+    
+    # TODO: intercambia arr[idx] con arr[hi] 
+    
+    arr[pivot_index], arr[hi] = arr[hi], arr[pivot_index]
+
     # TODO: llama a particiona(arr, lo, hi) y devuelve su resultado
+    
+    return particiona(arr, lo, hi)
 
 
 # ---------------------------------------------------------------------------
@@ -72,8 +85,11 @@ def quicksort(arr: list, lo: int = 0, hi: int = None) -> None:
         hi = len(arr) - 1
 
     # PASO BASE
-    # TODO: si lo >= hi, el subarreglo tiene 0 o 1 elemento → ya está ordenado
-
+    # TODO: si lo >= hi, el subarreglo tiene 0 o 1 elemento → ya está ordenado                                                                                                                                   
+                                                                                                                                                                                                                                                                                                                                            
+    if lo >= hi:                                                 
+        return
+        
     # HIPÓTESIS INDUCTIVA:
     # Supongo que quicksort(arr, lo, p-1) ordena correctamente arr[lo..p-1] y
     # que quicksort(arr, p+1, hi) ordena correctamente arr[p+1..hi].
@@ -81,9 +97,18 @@ def quicksort(arr: list, lo: int = 0, hi: int = None) -> None:
     # por lo que el arreglo completo arr[lo..hi] queda ordenado.
 
     # PASO RECURSIVO
-    # TODO: 1. p = particiona(arr, lo, hi)
+     # TODO: 1. p = particiona(arr, lo, hi)                                    
+
+    p = particiona(arr, lo, hi)
+
     # TODO: 2. quicksort(arr, lo, p - 1)
-    # TODO: 3. quicksort(arr, p + 1, hi)
+
+    quicksort(arr, lo, p - 1)
+
+    # TODO: 3. quicksort(arr, p + 1, hi) 
+
+    quicksort(arr, p + 1, hi)
+
 
 
 def quicksort_aleatorio(arr: list, lo: int = 0, hi: int = None) -> None:
@@ -93,7 +118,15 @@ def quicksort_aleatorio(arr: list, lo: int = 0, hi: int = None) -> None:
     if hi is None:
         hi = len(arr) - 1
 
-    # TODO: mismo esquema que quicksort, pero llamando a particiona_aleatoria
+    # TODO: mismo esquema que quicksort, pero llamando a particiona_aleatoria      
+    if lo >= hi:
+        return
+
+    p = particiona_aleatoria(arr, lo, hi)
+
+    quicksort_aleatorio(arr, lo, p - 1)
+
+    quicksort_aleatorio(arr, p + 1, hi)
 
 
 # ---------------------------------------------------------------------------
