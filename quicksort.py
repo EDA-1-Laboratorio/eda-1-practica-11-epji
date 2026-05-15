@@ -168,6 +168,8 @@ def quicksort_conteo(arr: list, lo: int, hi: int, conteo: list) -> None:
     quicksort_conteo(arr, lo, p - 1, conteo)
     quicksort_conteo(arr, p + 1, hi, conteo)
 
+    
+
 
 # ---------------------------------------------------------------------------
 # Utilidades de verificación y generación de datos
@@ -306,3 +308,37 @@ if __name__ == "__main__":
 
     print("\n[4] Tiempo de ejecución vs. sorted() (problema D.4)")
     _experimento_tiempo()
+
+
+    
+
+# ---------------------------------------------------------------------------
+# TEST DE DOBLAMIENTO (D.2)
+# ---------------------------------------------------------------------------
+
+print("\n--- TEST DE DOBLAMIENTO ---")
+
+valores_n = [1000, 2000, 4000, 8000]
+
+anterior = None
+
+print("\nN\tComparaciones\tRazón")
+
+for n in valores_n:
+
+    arr = generar_arreglo(n, 'aleatorio')
+
+    conteo = [0]
+
+    quicksort_conteo(arr, 0, n - 1, conteo)
+
+    comparaciones = conteo[0]
+
+    if anterior is None:
+        razon = "-"
+    else:
+        razon = round(comparaciones / anterior, 2)
+
+    print(f"{n}\t{comparaciones}\t\t{razon}")
+
+    anterior = comparaciones
