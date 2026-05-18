@@ -48,6 +48,52 @@ def busqueda_binaria(arr: list[int], objetivo: int,
     # TODO: si objetivo > arr[mid], busca en la mitad derecha  (mid+1..hi)
 
 
+import time
+import math
+
+
+# ---------------------------------------------------------------------------
+# Problema A – Búsqueda binaria recursiva
+# ---------------------------------------------------------------------------
+
+def busqueda_binaria(arr: list[int], objetivo: int,
+                     lo: int = 0, hi: int = None) -> int:
+    """
+    Busca 'objetivo' en arr[lo..hi] (extremos inclusivos).
+
+    Precondición : arr está ordenado de menor a mayor.
+    Retorna      : el índice de 'objetivo' si existe, o -1 si no está.
+    Complejidad  : O(log n) en el peor caso.
+    """
+    if hi is None:
+        hi = len(arr) - 1
+
+    # PASO BASE
+    # Si lo > hi, el subarreglo está vacío; por lo tanto, el objetivo no está.
+    if lo > hi:
+        return -1
+
+    mid = (lo + hi) // 2
+
+    # PASO BASE / CASO DIRECTO
+    # Si el elemento medio es el objetivo, ya encontramos su índice.
+    if arr[mid] == objetivo:
+        return mid
+
+    # HIPÓTESIS INDUCTIVA:
+    # Supongo que busqueda_binaria(arr, objetivo, lo, mid-1) o
+    # busqueda_binaria(arr, objetivo, mid+1, hi) devuelve correctamente
+    # el índice del objetivo en ese subarreglo, o -1 si no existe.
+
+    # PASO RECURSIVO
+    # Como el arreglo está ordenado, si objetivo < arr[mid], solo puede estar
+    # en la mitad izquierda; si objetivo > arr[mid], solo puede estar en la derecha.
+    if objetivo < arr[mid]:
+        return busqueda_binaria(arr, objetivo, lo, mid - 1)
+    else:
+        return busqueda_binaria(arr, objetivo, mid + 1, hi)
+
+
 # ---------------------------------------------------------------------------
 # Problema B – Versión instrumentada con contador de comparaciones
 # ---------------------------------------------------------------------------
@@ -65,14 +111,24 @@ def busqueda_binaria_conteo(arr: list[int], objetivo: int,
         print(f"Índice: {idx}, comparaciones: {conteo[0]}")
     """
     # PASO BASE
-    # TODO
+    if lo > hi:
+        return -1
 
     mid = (lo + hi) // 2
 
     conteo[0] += 1          # comparación con arr[mid]
-    # TODO: si arr[mid] == objetivo ...
+    if arr[mid] == objetivo:
+        return mid
 
-    # TODO: paso recursivo (no olvides pasar 'conteo')
+    # HIPÓTESIS INDUCTIVA:
+    # Supongo que la llamada recursiva sobre la mitad correcta devuelve
+    # el índice del objetivo si existe, o -1 si no existe.
+
+    # PASO RECURSIVO
+    if objetivo < arr[mid]:
+        return busqueda_binaria_conteo(arr, objetivo, lo, mid - 1, conteo)
+    else:
+        return busqueda_binaria_conteo(arr, objetivo, mid + 1, hi, conteo)
 
 
 # ---------------------------------------------------------------------------
@@ -85,6 +141,15 @@ def busqueda_lineal(arr: list[int], objetivo: int) -> int:
         if v == objetivo:
             return i
     return -1
+
+
+def medir_promedio_ns(funcion, repeticiones: int) -> float:
+    """Mide el tiempo promedio por ejecución en nanosegundos."""
+    t0 = time.perf_counter()
+    for _ in range(repeticiones):
+        funcion()
+    return (time.perf_counter() - t0) / repeticiones * 1e9
+
 
 
 # ---------------------------------------------------------------------------
